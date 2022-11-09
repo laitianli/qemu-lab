@@ -1,0 +1,17 @@
+#!/bin/bash
+switch=ovs-br0
+ovs_var_run=/usr/local/var/run/openvswitch
+OVS_PATH=/home/haizhi/qemu-lab/ovs-bin/
+OVS_SBIN_PATH=${OVS_PATH}/sbin/
+OVS_BIN_PATH=${OVS_PATH}/bin/
+
+
+ip addr flush dev $1
+ip link set $1 down
+echo "[SHELL]qemu-ovs-ifdown: run cmd: [ovs-vsctl del-port  $switch $1]"
+${OVS_BIN_PATH}/ovs-vsctl --db=unix:${ovs_var_run}/db.sock del-port ${switch} $1
+
+ip link set ${switch} down
+${OVS_BIN_PATH}/ovs-vsctl --db=unix:${ovs_var_run}/db.sock del-br ${switch}
+exit 0
+

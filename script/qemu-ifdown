@@ -1,0 +1,15 @@
+#!/bin/bash
+switch=br0
+if [ -n "$1" ]; then
+	ifconfig ${switch} 2.2.2.1/24 up
+	ip link set $1 down
+	echo "run cmd: [brctl delif $switch $1]"
+	brctl delif ${switch} $1
+
+	ip link set ${switch} down
+	brctl delbr ${switch}
+	exit 0
+else
+	echo "Error: no interface specified!!!!"
+	exit 1
+fi

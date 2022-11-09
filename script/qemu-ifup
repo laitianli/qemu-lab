@@ -1,0 +1,12 @@
+#!/bin/bash
+switch=br0
+if [ -n "$1" ]; then
+	ifconfig ${switch} 2.2.2.1/24 up
+	ip link set $1 up
+	echo "run cmd: [brctl addif $switch $1]"
+	brctl addif ${switch} $1
+	exit 0
+else
+	echo "Error: no interface specified!!!!"
+	exit 1
+fi
