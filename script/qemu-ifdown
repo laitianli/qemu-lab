@@ -1,10 +1,15 @@
 #!/bin/bash
-switch=br0
-if [ -n "$1" ]; then
-	ifconfig ${switch} 2.2.2.1/24 up
-	ip link set $1 down
-	echo "run cmd: [brctl delif $switch $1]"
-	brctl delif ${switch} $1
+TAP=$1
+if [ "X$TAP" == "X" ];then
+	echo "[Error] tap nic is null!!!"
+	exit 1;
+fi
+NUM=$(echo ${TAP} | sed 's/[^0-9]//g')
+switch=br${NUM}
+if [ -n "${TAP}" ]; then
+	ip link set ${TAP} down
+	echo "run cmd: [brctl delif $switch ${TAP}]"
+	brctl delif ${switch} ${TAP}
 
 	ip link set ${switch} down
 	brctl delbr ${switch}

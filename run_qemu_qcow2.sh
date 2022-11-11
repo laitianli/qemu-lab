@@ -8,16 +8,7 @@ KERNEL_IMG=${ROOT_DIR}/bin_kernel/bzImage
 #QEME_BIN=${ROOT_DIR}/qemu-2.11.0/x86_64-softmmu/qemu-system-x86_64
 QEME_BIN=/usr/libexec/qemu-kvm
 #QEME_BIN=gdb --args ${ROOT_DIR}/qemu-2.11.0/x86_64-softmmu/qemu-system-x86_64
-init()
-{
-	ifconfig -a | grep -w br0
-	if [ $? -eq 1 ];then
-		echo "brctl addbr br0"	
-		brctl addbr br0;
-		ifconfig br0 up;
-	fi
-#	echo "ip tuntap add tap01 mode tap"
-}
+
 #
 #	${QEME_BIN} -m 1024 \
 #		-smp 4	\
@@ -63,7 +54,6 @@ check_argument()
 main()
 {
 	check_argument;
-	init;
 	run_qemu ${INDEX};
 }
 
