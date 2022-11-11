@@ -1,0 +1,24 @@
+#!/bin/bash
+TAP=$1
+if [ "X$TAP" == "X" ];then
+	echo "[Error] tap nic is null!!!"
+	exit 1;
+fi
+NUM=$(echo ${TAP} | sed 's/[^0-9]//g')
+switch=br1
+LOWER_TAP="/sys/class/net/${switch}/lower_tap*"
+if [ -n "${TAP}" ]; then
+	ip link set ${TAP} down
+	echo "run cmd: [brctl delif $switch ${TAP}]"
+	brctl delif ${switch} ${TAP}
+
+    if [ ! -L ${LOWER_TAP} ];then
+	    ip link set ${switch} down
+    	brctl delbr ${switch}
+	    echo "run cmd: [brctl delbr ${switch}]"
+    fi
+	exit 0
+else
+	echo "Error: no interface specified!!!!"
+	exit 1
+fi

@@ -1,0 +1,24 @@
+#!/bin/bash
+TAP=$1
+echo "tap name=${TAP} argument: $@"
+if [ "X$TAP" == "X" ];then
+	echo "[Error] tap nic is null!!!"
+	exit 1;
+fi
+NUM=$(echo ${TAP} | sed 's/[^0-9]//g')
+switch=br0
+IPADDR=2.2.0.1
+if [ -n "${TAP}" ]; then ##tap0
+	ifconfig -a | grep -w ${switch}
+	if [ $? -eq 1 ];then
+		brctl addbr ${switch}
+	fi
+	ifconfig ${switch} ${IPADDR}/24 up
+	ip link set ${TAP} up
+	echo "run cmd: [brctl addif $switch ${TAP}]"
+	brctl addif ${switch} ${TAP}
+	exit 0
+else
+	echo "Error: no interface specified!!!!"
+	exit 1
+fi
